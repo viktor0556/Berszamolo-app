@@ -33,13 +33,29 @@ function App() {
   };
 
   useEffect(() => {
+    setNewDaysMonthly((prev) => {
+      const days = getDaysInMonth(new Date().getFullYear(), monthIndex);
+  
+      if (prev[monthIndex] && prev[monthIndex].length === days) {
+        return prev;
+      }
+  
+      return {
+        ...prev,
+        [monthIndex]: new Array(days).fill(0),
+      };
+    });
+  }, [monthIndex]);
+  
+  useEffect(() => {
     const totalHours = Object.values(newDaysMonthly[monthIndex] || []).reduce(
       (sum, hours) => sum + hours,
       0
     );
+  
     setAllHours(totalHours);
-    setMoney(totalHours * savedHourlyWage); // if hoursPerDay or savedHourlyWage changes it calculates the sum of hours for all days
-  }, [savedHourlyWage, newDaysMonthly, monthIndex]);
+    setMoney(totalHours * savedHourlyWage);
+  }, [monthIndex, savedHourlyWage]); 
 
   return (
     <div className="flex flex-col items-center p-4">
@@ -51,7 +67,7 @@ function App() {
         >
           &#8592;
         </button>
-        <h2 className="text-xl font-medium">{monthNames[monthIndex]}</h2>
+        <h2 className="text-xl font-medium">{monthNames[(monthIndex + 8) % 12]}</h2>
         <button
           onClick={() => handleNextMonth(setMonthIndex, setMonthDateValue)}
           className="text-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded"
@@ -66,30 +82,30 @@ function App() {
           </div>
         ))}
 
-        {daysInMonth(monthDate(), newDaysMonthly[monthIndex] || []).map(
-          (date, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                handleClick(
-                  index,
-                  newDaysMonthly,
-                  setNewDaysMonthly,
-                  allHours,
-                  setAllHours,
-                  savedHourlyWage,
-                  setMoney,
-                  monthIndex
-                );
-              }}
-              className="border rounded p-2 text-center hover:bg-gray-100 cursor-pointer"
-            >
-              {date}
-              <hr />
-              <span>Óra: {newDaysMonthly[monthIndex][index]}</span>
-            </div>
-          )
-        )}
+        {Array.from({
+          length: getDaysInMonth(new Date().getFullYear(), monthIndex),
+        }).map((_, index) => (
+          <div
+            key={index}
+            onClick={() => {
+              handleClick(
+                index,
+                newDaysMonthly,
+                setNewDaysMonthly,
+                allHours,
+                setAllHours,
+                savedHourlyWage,
+                setMoney,
+                monthIndex
+              );
+            }}
+            className="border rounded p-2 text-center hover:bg-gray-100 cursor-pointer"
+          >
+            {index + 1}
+            <hr />
+            <span>Óra: {newDaysMonthly[monthIndex]?.[index] ?? 0}</span>
+          </div>
+        ))}
       </div>
       <div className="mt-4 text-center">
         <p className="text-lg">Eddigi pénz: {money} ft</p>
