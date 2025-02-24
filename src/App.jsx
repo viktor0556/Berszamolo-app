@@ -13,7 +13,7 @@ import {
 import { handleClick } from "./utils/handleClickLogic";
 
 function App() {
-  const [monthDateValue, setMonthDateValue] = useState(0); // use it to change months
+  const [monthDateValue, setMonthDateValue] = useState(); // use it to change months
   const [money, setMoney] = useState(0);
   const [allHours, setAllHours] = useState(0);
   const [monthIndex, setMonthIndex] = useState(newDate); // Current index of month (0=jan, 1=feb stb.)
@@ -67,7 +67,7 @@ function App() {
         >
           &#8592;
         </button>
-        <h2 className="text-xl font-medium">{monthNames[(monthIndex + 8) % 12]}</h2>
+        <h2 className="text-xl font-medium">{monthNames[monthIndex]}</h2>
         <button
           onClick={() => handleNextMonth(setMonthIndex, setMonthDateValue)}
           className="text-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded"

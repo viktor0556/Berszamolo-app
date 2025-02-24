@@ -22,12 +22,8 @@ export const monthDate = () => {
   return cMonth; // returns the index of the current month from zero to 11
 };
 
-export const getDaysInMonth = (
-  // Calculates the days of the given month
-  monthDate = newDate,
-  monthDateValue = 0
-) => {
-  return new Date(2025, monthDate + monthDateValue, 0).getDate();
+export const getDaysInMonth = (year = new Date().getFullYear(), month) => {
+  return new Date(year, month + 1, 0).getDate();
 };
 
 export const daysInMonth = (monthDate = newDate, monthDateValue = 0) => {
